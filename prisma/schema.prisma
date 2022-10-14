@@ -14,8 +14,11 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
+model Book {
     id String @id @default(cuid())
+    title String @unique
+    authorName String 
+    year Int
 }
 
 // Necessary for Next auth
