@@ -10,7 +10,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
   ({ label, placeholder }, ref) => {
     const inputID = strToSousageCase(label);
     return (
-      <div className="mb-2">
+      <div>
         <label htmlFor={inputID} className="block">
           {label}
         </label>
@@ -19,7 +19,7 @@ const Input = React.forwardRef<HTMLInputElement, Props>(
           type="text"
           name={inputID}
           id={inputID}
-          className="block rounded-md border border-slate-400 p-2"
+          className="block w-full max-w-lg rounded-md border border-slate-400 p-2"
           placeholder={placeholder}
         />
       </div>

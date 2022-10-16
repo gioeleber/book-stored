@@ -13,7 +13,7 @@ interface Props {
 export default function BookForm({ action }: Props) {
   const trpcUtils = trpc.useContext();
   const nextRouter = useRouter();
-  const { bookSlug } = router.query;
+  const { slug } = router.query;
 
   const addBookMutation = trpc.book.addBook.useMutation({
     onSuccess() {
@@ -24,7 +24,7 @@ export default function BookForm({ action }: Props) {
   const editBookMutation = trpc.book.editBook.useMutation({
     onSuccess() {
       const newSlug = strToSlug(titleRef.current?.value ?? "");
-      if (newSlug && newSlug !== bookSlug) {
+      if (newSlug && newSlug !== slug) {
         nextRouter.push("/");
         resetForm();
         return;
@@ -66,7 +66,7 @@ export default function BookForm({ action }: Props) {
       yearRef.current?.value
     ) {
       editBookMutation.mutate({
-        slug: bookSlug as string,
+        slug: slug as string,
         title: titleRef.current?.value ?? null,
         authorName: authorRef.current?.value ?? null,
         year: yearRef.current?.value ? parseInt(yearRef.current?.value) : null,
@@ -76,7 +76,7 @@ export default function BookForm({ action }: Props) {
   return (
     <form
       onSubmit={action === "add" ? handleAddBook : handleEditBook}
-      className="mt-5"
+      className="mt-5 flex flex-col gap-y-5"
     >
       <Input ref={titleRef} label="Title" placeholder="Es. Harry Potter" />
       <Input
@@ -89,15 +89,17 @@ export default function BookForm({ action }: Props) {
         label="Year of Pubblication"
         placeholder="Es. 1999"
       />
-      <Button
-        isLoading={
-          action === "add"
-            ? addBookMutation.isLoading
-            : editBookMutation.isLoading
-        }
-      >
-        {action} book
-      </Button>
+      <div>
+        <Button
+          isLoading={
+            action === "add"
+              ? addBookMutation.isLoading
+              : editBookMutation.isLoading
+          }
+        >
+          {action} book
+        </Button>
+      </div>
     </form>
   );
 }
