@@ -6,11 +6,17 @@ import { trpc } from "../utils/trpc";
 import { APP_NAME } from "../utils/consts";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import Book from "../components/Book";
 
 const Home: NextPage = () => {
   const books = trpc.book.getBooks.useQuery();
-  const addBookMutation = trpc.book.addBook.useMutation();
-  console.log(addBookMutation.isLoading);
+  const trpcUtils = trpc.useContext();
+
+  const addBookMutation = trpc.book.addBook.useMutation({
+    onSuccess() {
+      trpcUtils.book.getBooks.invalidate();
+    },
+  });
 
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
@@ -35,7 +41,7 @@ const Home: NextPage = () => {
   };
 
   if (books.isLoading) return <p>Loading...</p>;
-  if (books.isError) {
+  if (books.isError || !books.data) {
     console.error(books.error);
     return <p>Error</p>;
   }
@@ -53,11 +59,9 @@ const Home: NextPage = () => {
 
         <div className="flex w-full items-center justify-center pt-6">
           {books.data.length > 0 && (
-            <ul>
+            <ul className="flex flex-col gap-y-4">
               {books.data.map((book) => (
-                <li key={book.id.toString()}>
-                  {book.title} - {book.authorName} - {book.year}
-                </li>
+                <Book key={book.id} book={book} />
               ))}
             </ul>
           )}

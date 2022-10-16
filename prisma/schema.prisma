@@ -16,6 +16,7 @@ datasource db {
 
 model Book {
     id String @id @default(cuid())
+    slug String @unique
     title String @unique
     authorName String 
     year Int
