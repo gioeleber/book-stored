@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import NextLink from "../../components/NextLink";
 import { trpc } from "../../utils/trpc";
+import BookForm from "../../widgets/BookForm";
 
 export default function Book() {
   const router = useRouter();
@@ -21,6 +22,7 @@ export default function Book() {
       </h1>
       <p>Author: {book.data.authorName}</p>
       <p>Year: {book.data.year}</p>
+      <BookForm action="edit" />
     </>
   );
 }

@@ -29,6 +29,31 @@ export const bookRouter = router({
         },
       });
     }),
+  editBook: publicProcedure
+    .input(
+      z.object({
+        title: z.string().nullable(),
+        authorName: z.string().nullable(),
+        year: z.number().nullable(),
+        slug: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      const data: { [key: string]: string | number } = {};
+      if (input.title) {
+        data.title = input.title;
+        data.slug = strToSlug(input.title);
+      }
+      if (input.authorName) data.authorName = input.authorName;
+      if (input.year) data.year = input.year;
+      console.log(data);
+      return ctx.prisma.book.update({
+        where: {
+          slug: input.slug,
+        },
+        data,
+      });
+    }),
   deleteBook: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) => {
